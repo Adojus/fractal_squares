@@ -1,0 +1,11 @@
+C:\Users\Justis\OneDrive - Kaunas University of Technology\4 Semestras\Algoritmai\Lab 1\Lab1_2_2\Lab1_2_2\bin\Debug\netcoreapp2.1\Lab1_2_2.deps.json
+C:\Users\Justis\OneDrive - Kaunas University of Technology\4 Semestras\Algoritmai\Lab 1\Lab1_2_2\Lab1_2_2\bin\Debug\netcoreapp2.1\Lab1_2_2.runtimeconfig.json
+C:\Users\Justis\OneDrive - Kaunas University of Technology\4 Semestras\Algoritmai\Lab 1\Lab1_2_2\Lab1_2_2\bin\Debug\netcoreapp2.1\Lab1_2_2.runtimeconfig.dev.json
+C:\Users\Justis\OneDrive - Kaunas University of Technology\4 Semestras\Algoritmai\Lab 1\Lab1_2_2\Lab1_2_2\bin\Debug\netcoreapp2.1\Lab1_2_2.dll
+C:\Users\Justis\OneDrive - Kaunas University of Technology\4 Semestras\Algoritmai\Lab 1\Lab1_2_2\Lab1_2_2\bin\Debug\netcoreapp2.1\Lab1_2_2.pdb
+C:\Users\Justis\OneDrive - Kaunas University of Technology\4 Semestras\Algoritmai\Lab 1\Lab1_2_2\Lab1_2_2\obj\Debug\netcoreapp2.1\Lab1_2_2.csproj.CoreCompileInputs.cache
+C:\Users\Justis\OneDrive - Kaunas University of Technology\4 Semestras\Algoritmai\Lab 1\Lab1_2_2\Lab1_2_2\obj\Debug\netcoreapp2.1\Lab1_2_2.AssemblyInfoInputs.cache
+C:\Users\Justis\OneDrive - Kaunas University of Technology\4 Semestras\Algoritmai\Lab 1\Lab1_2_2\Lab1_2_2\obj\Debug\netcoreapp2.1\Lab1_2_2.AssemblyInfo.cs
+C:\Users\Justis\OneDrive - Kaunas University of Technology\4 Semestras\Algoritmai\Lab 1\Lab1_2_2\Lab1_2_2\obj\Debug\netcoreapp2.1\Lab1_2_2.dll
+C:\Users\Justis\OneDrive - Kaunas University of Technology\4 Semestras\Algoritmai\Lab 1\Lab1_2_2\Lab1_2_2\obj\Debug\netcoreapp2.1\Lab1_2_2.pdb
+C:\Users\Justis\OneDrive - Kaunas University of Technology\4 Semestras\Algoritmai\Lab 1\Lab1_2_2\Lab1_2_2\obj\Debug\netcoreapp2.1\Lab1_2_2.csprojAssemblyReference.cache

@@ -1,0 +1,170 @@
+using System;
+using System.IO;
+
+namespace BMP_example
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            using (FileStream file = new FileStream("Kvadratai.bmp", FileMode.Create, FileAccess.Write))
+            {
+                //Sudaromas bmp formato monochrominis 1000x1000 taškų paveikslėlis
+                file.Write(
+                new byte[62]
+                {
+                    //Antraštė
+                    0x42, 0x4d,
+                    0x3e, 0xf4, 0x1, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    0x3e, 0x0, 0x0, 0x0,
+                    //Antraštės informacija
+                    0x28, 0x0, 0x0, 0x0,
+                    0xe8, 0x3, 0x0, 0x0,
+                    0xe8, 0x3, 0x0, 0x0,
+                    0x1, 0x0,
+                    0x1, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    0x0, 0xf4, 0x0, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    //Spalvų lentelė 
+                    0xff, 0xff, 0xff, 0x0,
+                    0x0, 0x0, 0x0, 0x0
+                   
+                });
+                
+                //Suskaičiuojame bmp paveikslėlio eilutės duomenų kiekį baitais (4 kartotinis) 1000 bit / 32 bit = 31,25 tokiu atveju eilutei reikės 32 baitų po 4 
+                int l = 128;
+                //Apibrėžiame taškų masyvą. Masyvo pirmo taško spalvą atitiks masyvo pirmo bito reikšmė
+                var t = new byte[1000 * l];
+
+                int generacija = 4;//Kelintą generacija sukurti
+                int kvadrato_siena = 216;
+
+                Rekursija(generacija, t, kvadrato_siena, 0, 0,l);
+
+                file.Write(t);
+                file.Close();
+            }
+        }
+
+
+        /// <summary>
+        /// This method creates fractal using recursion
+        /// </summary>
+        /// <param name="n">generation</param>
+        /// <param name="t">array of bits</param>
+        /// <param name="kvadr">length of square's edge</param>
+        /// <param name="kvadr_pries">length of previous generation's square's edge</param>
+        /// <param name="pozicija">position in byte array</param>
+        /// <param name="l">length of line</param>
+        static void Rekursija(int n, byte[] t, int kvadr, int kvadr_pries, int pozicija,int l)
+        {
+            if (n < 1)
+                return;
+
+            if (pozicija < 1) pozicija = (500 - (kvadr / 2)) * l + 64 - (kvadr / 16);
+            int temp_poz = pozicija;
+
+            //Paišome kvadratus 216x216 taškų, kurie susijungia kampais.
+            for (int ii = 0; ii < 5; ii++)
+            {
+                pozicija = temp_poz;
+                switch (ii)
+                {
+                    //vidurys
+                    case 0:
+                        Rekursija(n - 1, t, kvadr / 3, kvadr, pozicija + ((kvadr / 3)) * l + (kvadr / 3) / 8,l);
+                        break;
+                    //desine virsus
+                    case 1:
+                        pozicija = pozicija + kvadr * l + kvadr / 8;
+                        Rekursija(n - 1, t, kvadr / 3, kvadr, pozicija + ((kvadr / 3)) * l + (kvadr / 3) / 8,l);
+                        break;
+                    //kaire virsus
+                    case 2:
+                        pozicija = pozicija + kvadr * l - kvadr / 8;
+                        Rekursija(n - 1, t, kvadr / 3, kvadr, pozicija + (kvadr / 3) * l + (kvadr / 3) / 8,l);
+                        break;
+                    //desine apacia
+                    case 3:
+                        pozicija = pozicija - kvadr * l + kvadr / 8;
+                        Rekursija(n - 1, t, kvadr / 3, kvadr, pozicija + (kvadr / 3) * l + (kvadr / 3) / 8,l);
+                        break;
+                    //kaire apacia
+                    case 4:
+                        pozicija = pozicija - kvadr * l - kvadr / 8;
+                        Rekursija(n - 1, t, kvadr / 3, kvadr, pozicija + (kvadr / 3) * l + (kvadr / 3) / 8,l);
+                        break;
+                }
+
+                for (int i = 0; i < kvadr; i++)
+                {
+                    if(n==1)
+                    for (int j = i * l; j < i * l + kvadr / 8; j++)
+                    {
+                        t[j + pozicija] ^= 0xFF;
+                    }
+
+                    //if (kvadr_pries > 0)
+                    //{
+                    //    for (int k = 0; k < 4; k++)
+                    //    {
+                    //        //int pozicija2 = temp_poz-l*kvadr-kvadr/8;
+                    //        //switch (k)
+                    //        //{
+                    //        //    //virsus desine
+                    //        //    case 0:
+                    //        //        pozicija2 = pozicija2 + (kvadr + kvadr_pries) * l + kvadr / 8 + kvadr_pries / 8;
+                    //        //        break;
+
+                    //        //    //virsus kaire
+                    //        //    case 1:
+                    //        //        pozicija2 = pozicija2 + (kvadr + kvadr_pries) * l + kvadr / 8 - kvadr_pries / 8;
+                    //        //        break;
+
+                    //        //    //apacia desine
+                    //        //    case 2:
+                    //        //        pozicija2 = pozicija2 - 2 * kvadr * l + kvadr / 8 + kvadr_pries / 8;
+                    //        //        break;
+
+                    //        //    //apacia kaire
+                    //        //    case 3:
+                    //        //        pozicija2 = pozicija2 - 2 * kvadr * l + kvadr / 8 - kvadr_pries / 8;
+                    //        //        break;
+
+
+                    //        //}
+                    //        //switch (ii)
+                    //        //{
+                    //        //    case 0:
+                    //        //        break;
+                    //        //    //desine virsus
+                    //        //    case 1:
+                    //        //        pozicija2 = pozicija2 + kvadr * l + kvadr / 8;
+                    //        //        break;
+                    //        //    //kaire virsus
+                    //        //    case 2:
+                    //        //        pozicija2 = pozicija2 + kvadr * l - kvadr / 8;
+                    //        //        break;
+                    //        //    //desine apacia
+                    //        //    case 3:
+                    //        //        pozicija2 = pozicija2 - kvadr * l + kvadr / 8;
+                    //        //        break;
+                    //        //    //kaire apacia
+                    //        //    case 4:
+                    //        //        pozicija2 = pozicija2 - kvadr * l - kvadr / 8;
+                    //        //        break;
+                    //        //}
+                    //    }
+                    //}
+                }
+
+            }
+
+        }
+    }
+}

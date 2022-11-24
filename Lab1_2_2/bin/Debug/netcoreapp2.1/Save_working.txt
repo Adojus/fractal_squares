@@ -1,0 +1,304 @@
+using System;
+using System.IO;
+
+namespace BMP_example
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            using (FileStream file = new FileStream("Kvadratai.bmp", FileMode.Create, FileAccess.Write))
+            {
+                //Sudaromas bmp formato monochrominis 1000x1000 taškų paveikslėlis
+                file.Write(
+                new byte[62]
+                {
+                    //Antraštė
+                    0x42, 0x4d,
+                    0x3e, 0xf4, 0x1, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    0x3e, 0x0, 0x0, 0x0,
+                    //Antraštės informacija
+                    0x28, 0x0, 0x0, 0x0,
+                    0xe8, 0x3, 0x0, 0x0,
+                    0xe8, 0x3, 0x0, 0x0,
+                    0x1, 0x0,
+                    0x1, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    0x0, 0xf4, 0x0, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    0x0, 0x0, 0x0, 0x0,
+                    //Spalvų lentelė 
+                    //0xff, 0x0, 0x0, 0x0,
+                    //0x0, 0x0, 0xff, 0x0
+                    0xff, 0x0, 0x0, 0x0,
+                    0xff, 0x0, 0xff, 0x0
+                });
+                //Suskaičiuojame bmp paveikslėlio eilutės duomenų kiekį baitais (4 kartotinis) 1000 bit / 32 bit = 31,25 tokiu atveju eilutei reikės 32 baitų po 4 
+                int l = 128;
+                //Apibrėžiame taškų masyvą. Masyvo pirmo taško spalvą atitiks masyvo pirmo bito reikšmė
+                var t = new byte[1000 * l];
+
+                //int sk = (500 - 64 + 8) * l + 64 - 8;
+                //int sk = t.Length/2-l/2;
+
+
+                //int kvadr = 192;
+                ////Paišome kvadratą 128x128 taškų, kurio kairys apatinis kampas sutampa su bmp paveikslėlio apatiniu kairiu kampu.
+                //for (int ii = 0; ii < 5; ii++)
+                //{
+
+                //    int sk2 = (500 - 96 ) * l + 64 - 12;
+                //    switch (ii)
+                //    {
+                //            case 0:
+                //                break;
+                //            case 1:
+                //                sk2 = sk2 + kvadr * l+kvadr/8;
+                //                break;
+                //            case 2:
+                //                sk2 = sk2 + kvadr * l - kvadr / 8;
+                //                break;
+                //            case 3:
+                //                sk2 = sk2 - kvadr * l + kvadr / 8;
+                //                break;
+                //            case 4:
+                //                sk2 = sk2 - kvadr * l - kvadr / 8;
+                //                break;
+                //    }
+
+                //    for (int i = 0; i < kvadr; i++)
+                //    {
+                //        for (int j = i * l; j < i * l + kvadr / 8; j++)
+                //        {
+                //            t[j + sk2] = 0xFF;
+                //        }
+                //    }
+                //}
+
+
+
+                int sk = (500 - 96) * l + 64 - 12;
+                //for (int i = 0; i < 96; i++)
+                //{
+                //    for (int j = i * l; j < i * l + 96 / 8; j++)
+                //    {
+                //        t[j + sk] = 0x00;
+                //        //Console.WriteLine("{0} {1}", j, i * l + 64 / 8);
+                //    }
+                //}
+
+
+
+
+
+                int kv = 216/*324*//*243*//*192*/;
+                //Rekursija(1, t, kv, 0, 0);
+                Rekursija(4, t, kv, 0, 0);
+                Rekursija(3, t, kv, 0, 0);
+
+                //Rekursija(1, t, kv, 0, 0);
+                //for (int i = 0; i < t.Length; i++)
+                //    t[i] ^= 0xFF;
+                //Rekursija(3, t, kv / 3, kv, 0);
+
+                //Rekursija(3, t, kv / 9, kv / 3, 0);
+                //Rekursija(3, t, kv / 9, kv / 3, 40030);
+                //Rekursija(3, t, kv / 9, kv / 3, 70030);
+                //Rekursija(3, t, kv / 9, kv / 3, 20030);
+
+                //kv = kv / 3; ;
+                //for (int i = 0; i < t.Length; i++)
+                //    t[i] = 0;
+                //Rekursija(1, t, kv / 3, 72);
+
+
+                //kv = kv / 3; ;
+                //for (int i = 0; i < t.Length; i++)
+                //    t[i] = 0;
+                //Rekursija(1, t, kv, 72);
+                //kv = kv/3;
+                //for (int i = 0; i < t.Length; i++)
+                //    t[i] = 0;
+                //Rekursija(1, t, kv, 24);
+
+                //Rekursija(1, t, 216, 0);
+
+
+
+
+
+
+                //Paišome vertikalia liniją per visą paveikslėlį y = 7.
+                //for (int i = 0; i < 1000 * l; i += l)
+                //    t[i + 63] ^= 1;
+
+                ////horizontale
+                //for (int i = 0; i < 128; i++)
+                //    t[i + 499 * l] ^= 0xFF;
+
+
+                //Paišome įstrižai liniją per visą paveikslėlį nuo (0, 0) iki (999, 999)
+                byte patern = 0b10000000;
+                int p = 0;
+                //for (int i = 0; i < 1000; i++)
+                //{
+
+                //    t[p] ^= patern;
+                //    patern = patern == 1 ? (byte)(0b10000000) : (byte)(patern >> 1);
+                //    p += l + (patern >> 7);
+                //}
+                t[0] ^= 0xFF;
+                t[1] = 1;
+                t[2] ^= 0xFF;
+                file.Write(t);
+                file.Close();
+            }
+        }
+
+
+
+
+
+
+
+
+        static void Rekursija(int n, byte[] t, int kvadr, int kvadr_pries, int sk1)
+        {
+            if (n < 1)
+                return;
+
+            //for (int i = 0; i < t.Length; i++)
+            //    t[i] = 0;
+            //int fake_n=2;
+            //Rekursija(fake_n-1, t, kvadr_pries, 0, 0);
+
+
+            int l = 128;
+
+            if (sk1 < 1) sk1 = (500 - (kvadr / 2)) * l + 64 - (kvadr / 16);
+            int temp_sk1 = sk1;
+
+            //int kvadr = 192;
+            //Paišome kvadratus 216x216/192x192 taškų, kurie susijungia kampais.
+            for (int ii = 0; ii < 5; ii++)
+            {
+                //Console.WriteLine(kvadr);
+                //int sk2 = (500 - 96) * l + 64 - 12;
+                sk1 = temp_sk1;
+                //sk1 = (500 - (kvadr / 2)) * l + 64 - (kvadr / 16);
+                switch (ii)
+                {
+                    //vidurys
+                    case 0:
+                        Rekursija(n - 1, t, kvadr / 3, kvadr, sk1 + ((kvadr / 3)) * l + (kvadr / 3) / 8);
+                        break;
+                    //desine virsus
+                    case 1:
+                        sk1 = sk1 + kvadr * l + kvadr / 8;
+                        Rekursija(n - 1, t, kvadr / 3, kvadr, sk1 + ((kvadr / 3)) * l + (kvadr / 3) / 8);
+                        break;
+                    //kaire virsus
+                    case 2:
+                        sk1 = sk1 + kvadr * l - kvadr / 8;
+                        Rekursija(n - 1, t, kvadr / 3, kvadr, sk1 + (kvadr / 3) * l + (kvadr / 3) / 8);
+                        break;
+                    //desine apacia
+                    case 3:
+                        sk1 = sk1 - kvadr * l + kvadr / 8;
+                        Rekursija(n - 1, t, kvadr / 3, kvadr, sk1 + (kvadr / 3) * l + (kvadr / 3) / 8);
+                        break;
+                    //kaire apacia
+                    case 4:
+                        sk1 = sk1 - kvadr * l - kvadr / 8;
+                        Rekursija(n - 1, t, kvadr / 3, kvadr, sk1 + (kvadr / 3) * l + (kvadr / 3) / 8);
+                        break;
+                }
+
+                for (int i = 0; i < kvadr; i++)
+                {
+
+                    for (int j = i * l; j < i * l + kvadr / 8; j++)
+                    {
+                        //Console.WriteLine(sk1+j);
+                        t[j + sk1] ^= 0xFF;
+                    }
+
+                    if (kvadr_pries > 0)
+                    {
+                        for (int k = 0; k < 4; k++)
+                        {
+                            //int sk2 = ((500 - (kvadr_pries / 2)) * l + 64 - (kvadr_pries / 16))+100*128+30;
+                            int sk2 = temp_sk1-l*kvadr-kvadr/8;
+                            switch (k)
+                            {
+                                //virsus desine
+                                case 0:
+                                    sk2 = sk2 + (kvadr + kvadr_pries) * l + kvadr / 8 + kvadr_pries / 8;
+                                   // Rekursija(n - 1, t, kvadr / 3, kvadr, sk2 + (kvadr + 100 * l));
+                                    break;
+
+                                //virsus kaire
+                                case 1:
+                                    sk2 = sk2 + (kvadr + kvadr_pries) * l + kvadr / 8 - kvadr_pries / 8;
+                                   // Rekursija(n - 1, t, kvadr / 3, kvadr, sk2);
+                                    break;
+
+                                //apacia desine
+                                case 2:
+                                    sk2 = sk2 - 2 * kvadr * l + kvadr / 8 + kvadr_pries / 8;
+                                    //Rekursija(n - 1, t, kvadr / 3, kvadr, sk2);
+                                    break;
+
+                                //apacia kaire
+                                case 3:
+                                    sk2 = sk2 - 2 * kvadr * l + kvadr / 8 - kvadr_pries / 8;
+                                    //Rekursija(n - 1, t, kvadr / 3, kvadr, sk2);
+                                    break;
+
+
+                            }
+                            switch (ii)
+                            {
+                                case 0:
+                                    break;
+                                //desine virsus
+                                case 1:
+                                    sk2 = sk2 + kvadr * l + kvadr / 8;
+                                    //Rekursija(n - 1, t, kvadr / 3, kvadr, sk2+500);
+                                    break;
+                                //kaire virsus
+                                case 2:
+                                    sk2 = sk2 + kvadr * l - kvadr / 8;
+                                    //Rekursija(n - 1, t, kvadr / 3, kvadr, sk2);
+                                    break;
+                                //desine apacia
+                                case 3:
+                                    sk2 = sk2 - kvadr * l + kvadr / 8;
+                                    //Rekursija(n - 1, t, kvadr / 3, kvadr, sk2);
+                                    break;
+                                //kaire apacia
+                                case 4:
+                                    sk2 = sk2 - kvadr * l - kvadr / 8;
+                                    //Rekursija(n - 1, t, kvadr / 3, kvadr, sk2);
+                                    break;
+                            }
+                            //for (int j = i * l; j < i * l + kvadr / 8; j++)
+                            //{
+                            //    t[j + sk2] ^= 0xFF;
+                            //}
+                        }
+
+
+                    }
+                }
+
+            }
+            //Rekursija(n - 1, t, kvadr / 3, kvadr, 0);
+            //Rekursija(n - 1, t, kvadr / 3, kvadr, 30000);
+
+        }
+    }
+}
